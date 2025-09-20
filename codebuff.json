@@ -1,0 +1,20 @@
+{
+  "description": "Template configuration for this project. See https://www.codebuff.com/config for all options.",
+  "startupProcesses": [],
+  "fileChangeHooks": [
+    {
+      "name": "build",
+      "command": "cmake --build . -j",
+      "cwd": "build",
+      "filePattern": "src/**/*.{cpp,hpp}",
+      "enabled": true
+    },
+    {
+      "name": "test",
+      "command": "ctest --output-on-failure",
+      "cwd": "build",
+      "filePattern": "tests/**/*.cpp",
+      "enabled": true
+    }
+  ]
+}

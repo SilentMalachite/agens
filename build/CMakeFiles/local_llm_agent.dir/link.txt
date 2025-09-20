@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/local_llm_agent.dir/src/main.cpp.o CMakeFiles/local_llm_agent.dir/src/system_info.cpp.o CMakeFiles/local_llm_agent.dir/src/chat.cpp.o CMakeFiles/local_llm_agent.dir/src/backend.cpp.o -o local_llm_agent

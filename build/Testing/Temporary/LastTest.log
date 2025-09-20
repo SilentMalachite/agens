@@ -1,0 +1,36 @@
+Start testing: Sep 20 11:27 JST
+----------------------------------------------------------
+1/2 Testing: unit
+1/2 Test: unit
+Command: "/Users/hiro/Projetct/GitHub/agens/build/unit_tests"
+Directory: /Users/hiro/Projetct/GitHub/agens/build
+"unit" start time: Sep 20 11:27 JST
+Output:
+----------------------------------------------------------
+All tests passed
+<end of output>
+Test time =   0.23 sec
+----------------------------------------------------------
+Test Passed.
+"unit" end time: Sep 20 11:27 JST
+"unit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/2 Testing: cli_help
+2/2 Test: cli_help
+Command: "/Users/hiro/Projetct/GitHub/agens/build/agens" "--help"
+Directory: /Users/hiro/Projetct/GitHub/agens/build
+"cli_help" start time: Sep 20 11:27 JST
+Output:
+----------------------------------------------------------
+使い方: agens [-b backend] [-m model] [-p prompt]
+  backend: ollama|lmstudio
+<end of output>
+Test time =   0.31 sec
+----------------------------------------------------------
+Test Passed.
+"cli_help" end time: Sep 20 11:27 JST
+"cli_help" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 20 11:27 JST
