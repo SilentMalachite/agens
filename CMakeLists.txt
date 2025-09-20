@@ -47,13 +47,19 @@ elseif(UNIX)
   # No extra deps.
 endif()
 if(BUILD_TESTING)
+  # integration テストは bash 依存のため、事前に検出して存在しない環境（特に Windows ランナー）ではスキップ
+  find_program(BASH_EXECUTABLE NAMES bash)
   add_executable(unit_tests
     tests/test_main.cpp
   )
   target_link_libraries(unit_tests PRIVATE agens_lib)
   add_test(NAME unit COMMAND unit_tests)
   add_test(NAME cli_help COMMAND $<TARGET_FILE:agens> --help)
-  add_test(NAME integration COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration.sh $<TARGET_FILE:agens>)
+  if(BASH_EXECUTABLE)
+    add_test(NAME integration COMMAND ${BASH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration.sh $<TARGET_FILE:agens>)
+  else()
+    message(WARNING "bash not found; skipping integration test")
+  endif()
   if(ENABLE_SANITIZERS AND CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     target_link_options(unit_tests PRIVATE -fsanitize=address -fsanitize=undefined)
   endif()

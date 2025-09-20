@@ -18,11 +18,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Windows でも bash/grep 等が確実に使えるよう MSYS2 を導入
+      - name: Setup MSYS2 (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          # bash と最小限のコアユーティリティを導入
+          install: >-
+            bash
+            coreutils
+            grep
+            sed
+            gawk
+
       - name: Configure
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
-            cmake -S . -B build -DBUILD_TESTING=ON
+            # Windows は Ninja で統一してツール検出の揺れを防止
+            cmake -S . -B build -G Ninja -DBUILD_TESTING=ON
           else
             cmake -S . -B build -DBUILD_TESTING=ON -DENABLE_SANITIZERS=ON
           fi
@@ -34,4 +49,3 @@ jobs:
       - name: Test
         shell: bash
         run: ctest --test-dir build -j2 --output-on-failure
-
