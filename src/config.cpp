@@ -29,7 +29,9 @@ static string to_json(const AppConfig& c) {
     o << "  \"auto_dry_run\": " << (c.auto_dry_run?"true":"false") << ",\n";
     o << "  \"last_backend\": \"" << json_escape(c.last_backend) << "\",\n";
     o << "  \"last_model\": \""   << json_escape(c.last_model)   << "\",\n";
-    o << "  \"last_cwd\": \""     << json_escape(c.last_cwd)     << "\"\n";
+    o << "  \"last_cwd\": \""     << json_escape(c.last_cwd)     << "\",\n";
+    o << "  \"unified_gpu_ratio\": " << (c.unified_gpu_ratio)       << ",\n";
+    o << "  \"language\": \""     << json_escape(c.language)     << "\"\n";
     o << "}\n";
     return o.str();
 }
@@ -62,6 +64,21 @@ static vector<string> parse_string_array(const string& text, const string& key) 
         }
     }
     return out;
+}
+
+static bool parse_number(const string& text, const string& key, double& out) {
+    auto pos = text.find("\""+key+"\""); if (pos==string::npos) return false;
+    pos = text.find(':', pos); if (pos==string::npos) return false;
+    size_t i = pos+1;
+    while (i<text.size() && isspace(static_cast<unsigned char>(text[i]))) ++i;
+    size_t j = i; bool any=false;
+    while (j<text.size()) {
+        char c = text[j];
+        if ((c>='0'&&c<='9') || c=='-' || c=='+' || c=='.' || c=='e' || c=='E') { any=true; ++j; continue; }
+        break;
+    }
+    if (!any) return false;
+    try { out = stod(text.substr(i, j-i)); return true; } catch (...) { return false; }
 }
 
 static string parse_string(const string& text, const string& key) {
@@ -109,6 +126,9 @@ bool load_config(AppConfig& cfg, string* err) {
     cfg.last_backend = parse_string(body, "last_backend");
     cfg.last_model   = parse_string(body, "last_model");
     cfg.last_cwd     = parse_string(body, "last_cwd");
+    double d;
+    if (parse_number(body, "unified_gpu_ratio", d)) cfg.unified_gpu_ratio = d;
+    cfg.language = parse_string(body, "language");
     return true;
 }
 
@@ -120,4 +140,3 @@ bool save_config(const AppConfig& cfg, string* err) {
     ofs << to_json(cfg);
     return true;
 }
-

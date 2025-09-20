@@ -6,7 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/Users/hiro/Projetct/GitHub/agens/src
 
-CXX_FLAGSarm64 = -O3 -DNDEBUG -std=c++20 -arch arm64
-
-CXX_FLAGS = -O3 -DNDEBUG -std=c++20 -arch arm64
+CXX_FLAGS = -O3 -DNDEBUG -std=c++20
 

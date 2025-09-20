@@ -491,6 +491,19 @@ ContinuousSubmit/fast:
 .PHONY : ContinuousSubmit/fast
 
 #=============================================================================
+# Target rules for targets named agens_lib
+
+# Build rule for target.
+agens_lib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 agens_lib
+.PHONY : agens_lib
+
+# fast build rule for target.
+agens_lib/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/build
+.PHONY : agens_lib/fast
+
+#=============================================================================
 # Target rules for targets named agens
 
 # Build rule for target.
@@ -521,8 +534,7 @@ src/agent_mode.o: src/agent_mode.cpp.o
 
 # target to build an object file
 src/agent_mode.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/agent_mode.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/agent_mode.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/agent_mode.cpp.o
 .PHONY : src/agent_mode.cpp.o
 
 src/agent_mode.i: src/agent_mode.cpp.i
@@ -530,8 +542,7 @@ src/agent_mode.i: src/agent_mode.cpp.i
 
 # target to preprocess a source file
 src/agent_mode.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/agent_mode.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/agent_mode.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/agent_mode.cpp.i
 .PHONY : src/agent_mode.cpp.i
 
 src/agent_mode.s: src/agent_mode.cpp.s
@@ -539,8 +550,7 @@ src/agent_mode.s: src/agent_mode.cpp.s
 
 # target to generate assembly for a file
 src/agent_mode.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/agent_mode.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/agent_mode.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/agent_mode.cpp.s
 .PHONY : src/agent_mode.cpp.s
 
 src/backend.o: src/backend.cpp.o
@@ -548,8 +558,7 @@ src/backend.o: src/backend.cpp.o
 
 # target to build an object file
 src/backend.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/backend.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/backend.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/backend.cpp.o
 .PHONY : src/backend.cpp.o
 
 src/backend.i: src/backend.cpp.i
@@ -557,8 +566,7 @@ src/backend.i: src/backend.cpp.i
 
 # target to preprocess a source file
 src/backend.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/backend.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/backend.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/backend.cpp.i
 .PHONY : src/backend.cpp.i
 
 src/backend.s: src/backend.cpp.s
@@ -566,8 +574,7 @@ src/backend.s: src/backend.cpp.s
 
 # target to generate assembly for a file
 src/backend.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/backend.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/backend.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/backend.cpp.s
 .PHONY : src/backend.cpp.s
 
 src/chat.o: src/chat.cpp.o
@@ -575,8 +582,7 @@ src/chat.o: src/chat.cpp.o
 
 # target to build an object file
 src/chat.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/chat.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/chat.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/chat.cpp.o
 .PHONY : src/chat.cpp.o
 
 src/chat.i: src/chat.cpp.i
@@ -584,8 +590,7 @@ src/chat.i: src/chat.cpp.i
 
 # target to preprocess a source file
 src/chat.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/chat.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/chat.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/chat.cpp.i
 .PHONY : src/chat.cpp.i
 
 src/chat.s: src/chat.cpp.s
@@ -593,8 +598,7 @@ src/chat.s: src/chat.cpp.s
 
 # target to generate assembly for a file
 src/chat.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/chat.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/chat.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/chat.cpp.s
 .PHONY : src/chat.cpp.s
 
 src/config.o: src/config.cpp.o
@@ -602,8 +606,7 @@ src/config.o: src/config.cpp.o
 
 # target to build an object file
 src/config.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/config.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/config.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/config.cpp.o
 .PHONY : src/config.cpp.o
 
 src/config.i: src/config.cpp.i
@@ -611,8 +614,7 @@ src/config.i: src/config.cpp.i
 
 # target to preprocess a source file
 src/config.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/config.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/config.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/config.cpp.i
 .PHONY : src/config.cpp.i
 
 src/config.s: src/config.cpp.s
@@ -620,8 +622,7 @@ src/config.s: src/config.cpp.s
 
 # target to generate assembly for a file
 src/config.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/config.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/config.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/config.cpp.s
 .PHONY : src/config.cpp.s
 
 src/file_finder.o: src/file_finder.cpp.o
@@ -629,8 +630,7 @@ src/file_finder.o: src/file_finder.cpp.o
 
 # target to build an object file
 src/file_finder.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/file_finder.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/file_finder.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/file_finder.cpp.o
 .PHONY : src/file_finder.cpp.o
 
 src/file_finder.i: src/file_finder.cpp.i
@@ -638,8 +638,7 @@ src/file_finder.i: src/file_finder.cpp.i
 
 # target to preprocess a source file
 src/file_finder.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/file_finder.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/file_finder.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/file_finder.cpp.i
 .PHONY : src/file_finder.cpp.i
 
 src/file_finder.s: src/file_finder.cpp.s
@@ -647,8 +646,7 @@ src/file_finder.s: src/file_finder.cpp.s
 
 # target to generate assembly for a file
 src/file_finder.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/file_finder.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/file_finder.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/file_finder.cpp.s
 .PHONY : src/file_finder.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -675,13 +673,36 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/ports.o: src/ports.cpp.o
+.PHONY : src/ports.o
+
+# target to build an object file
+src/ports.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/ports.cpp.o
+.PHONY : src/ports.cpp.o
+
+src/ports.i: src/ports.cpp.i
+.PHONY : src/ports.i
+
+# target to preprocess a source file
+src/ports.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/ports.cpp.i
+.PHONY : src/ports.cpp.i
+
+src/ports.s: src/ports.cpp.s
+.PHONY : src/ports.s
+
+# target to generate assembly for a file
+src/ports.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/ports.cpp.s
+.PHONY : src/ports.cpp.s
+
 src/system_info.o: src/system_info.cpp.o
 .PHONY : src/system_info.o
 
 # target to build an object file
 src/system_info.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/system_info.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/system_info.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/system_info.cpp.o
 .PHONY : src/system_info.cpp.o
 
 src/system_info.i: src/system_info.cpp.i
@@ -689,8 +710,7 @@ src/system_info.i: src/system_info.cpp.i
 
 # target to preprocess a source file
 src/system_info.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/system_info.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/system_info.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/system_info.cpp.i
 .PHONY : src/system_info.cpp.i
 
 src/system_info.s: src/system_info.cpp.s
@@ -698,17 +718,39 @@ src/system_info.s: src/system_info.cpp.s
 
 # target to generate assembly for a file
 src/system_info.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/system_info.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/system_info.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/system_info.cpp.s
 .PHONY : src/system_info.cpp.s
+
+src/utils.o: src/utils.cpp.o
+.PHONY : src/utils.o
+
+# target to build an object file
+src/utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/utils.cpp.o
+.PHONY : src/utils.cpp.o
+
+src/utils.i: src/utils.cpp.i
+.PHONY : src/utils.i
+
+# target to preprocess a source file
+src/utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/utils.cpp.i
+.PHONY : src/utils.cpp.i
+
+src/utils.s: src/utils.cpp.s
+.PHONY : src/utils.s
+
+# target to generate assembly for a file
+src/utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/utils.cpp.s
+.PHONY : src/utils.cpp.s
 
 src/web_search.o: src/web_search.cpp.o
 .PHONY : src/web_search.o
 
 # target to build an object file
 src/web_search.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/web_search.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/web_search.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/web_search.cpp.o
 .PHONY : src/web_search.cpp.o
 
 src/web_search.i: src/web_search.cpp.i
@@ -716,8 +758,7 @@ src/web_search.i: src/web_search.cpp.i
 
 # target to preprocess a source file
 src/web_search.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/web_search.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/web_search.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/web_search.cpp.i
 .PHONY : src/web_search.cpp.i
 
 src/web_search.s: src/web_search.cpp.s
@@ -725,8 +766,7 @@ src/web_search.s: src/web_search.cpp.s
 
 # target to generate assembly for a file
 src/web_search.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens.dir/build.make CMakeFiles/agens.dir/src/web_search.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unit_tests.dir/build.make CMakeFiles/unit_tests.dir/src/web_search.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/agens_lib.dir/build.make CMakeFiles/agens_lib.dir/src/web_search.cpp.s
 .PHONY : src/web_search.cpp.s
 
 tests/test_main.o: tests/test_main.cpp.o
@@ -791,6 +831,7 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... agens"
+	@echo "... agens_lib"
 	@echo "... unit_tests"
 	@echo "... src/agent_mode.o"
 	@echo "... src/agent_mode.i"
@@ -810,9 +851,15 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/ports.o"
+	@echo "... src/ports.i"
+	@echo "... src/ports.s"
 	@echo "... src/system_info.o"
 	@echo "... src/system_info.i"
 	@echo "... src/system_info.s"
+	@echo "... src/utils.o"
+	@echo "... src/utils.i"
+	@echo "... src/utils.s"
 	@echo "... src/web_search.o"
 	@echo "... src/web_search.i"
 	@echo "... src/web_search.s"

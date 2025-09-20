@@ -5,6 +5,7 @@
 #include <sstream>
 #include <algorithm>
 #include <filesystem>
+#include <cctype>
 
 #include "utils.hpp"
 #include "system_info.hpp"
@@ -21,8 +22,22 @@ using namespace std;
 // ビルダー類は chat.cpp へ分離
 
 
-static void print_tuning(const InferenceTuning& t) {
-    cout << "[推奨パラメータ] context=" << t.context
+struct Messages {
+    std::string lang = "ja";
+    std::string usage() const { return lang=="en" ? "Usage: agens [-b backend] [-m model] [-p prompt]" : "使い方: agens [-b backend] [-m model] [-p prompt]"; }
+    std::string backend_hint() const { return lang=="en" ? "  backend: ollama|lmstudio" : "  backend: ollama|lmstudio"; }
+    std::string starting() const { return lang=="en" ? "Starting local LLM agent. Replies in Japanese." : "ローカルLLMエージェントを起動します。常に日本語で応答します。"; }
+    std::string api_missing1() const { return lang=="en" ? "No local API found for Ollama(11434) or LM Studio(1234)." : "Ollama(11434)またはLM Studio(1234)のローカルAPIが見つかりません。"; }
+    std::string api_missing2() const { return lang=="en" ? "Please start Ollama or LM Studio server and try again." : "OllamaやLM Studioのサーバーを起動してから再度お試しください。"; }
+    std::string label_reco() const { return lang=="en" ? "[Recommended]" : "[推奨パラメータ]"; }
+    std::string label_sys()  const { return lang=="en" ? "[System]"      : "[システム検出]"; }
+    std::string label_ram_about() const { return lang=="en" ? ", RAM~" : ", RAM約"; }
+    std::string label_vram_unknown() const { return lang=="en" ? ", VRAM unknown" : ", VRAM不明"; }
+    std::string label_integrated_prefix() const { return lang=="en" ? ", Unified memory (est. GPU ~" : ", 統合メモリ(推定GPU利用~"; }
+};
+
+static void print_tuning(const InferenceTuning& t, const Messages& m) {
+    cout << m.label_reco() << " context=" << t.context
          << ", max_tokens=" << t.max_tokens
          << ", temperature=" << t.temperature
          << ", top_p=" << t.top_p
@@ -34,10 +49,10 @@ int main(int argc, char** argv) {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     
-    // Clean up old temporary files
-    utils::cleanup_temp_files();
-
     // コマンドライン
+    Messages msg;
+    // 早期に環境変数でヘルプ言語を切り替え
+    if (const char* envlang0 = getenv("AGENS_LANG")) { string v=envlang0; transform(v.begin(), v.end(), v.begin(), ::tolower); if (v=="en"||v=="ja") msg.lang=v; }
     string prefer_backend; // "ollama" or "lmstudio"
     string prefer_model;
     string one_prompt;
@@ -47,17 +62,21 @@ int main(int argc, char** argv) {
         else if ((a=="-m"||a=="--model") && i+1<argc) { prefer_model = argv[++i]; }
         else if ((a=="-p"||a=="--prompt") && i+1<argc) { one_prompt = argv[++i]; }
         else if (a=="-h"||a=="--help") {
-            cout << "使い方: agens [-b backend] [-m model] [-p prompt]\n";
-            cout << "  backend: ollama|lmstudio\n";
+            cout << msg.usage() << "\n";
+            cout << msg.backend_hint() << "\n";
             return 0;
         }
     }
 
-    cout << "ローカルLLMエージェントを起動します。常に日本語で応答します。\n";
-
     // 設定ロード
     AppConfig config;
     load_config(config);
+    // 言語（設定→環境変数で上書き）
+    if (!config.language.empty()) msg.lang = config.language;
+    if (const char* envlang = getenv("AGENS_LANG")) { string v=envlang; transform(v.begin(), v.end(), v.begin(), ::tolower); if (v=="en"||v=="ja") msg.lang=v; }
+
+    cout << msg.starting() << "\n";
+    cout.flush();
     if (!config.last_cwd.empty()) {
         std::error_code ec; std::filesystem::current_path(config.last_cwd, ec);
     }
@@ -65,25 +84,41 @@ int main(int argc, char** argv) {
     // システム検出
     auto si = detect_system_info();
     auto tune = decide_tuning(si);
-    cout << "[システム検出] ";
+    cout << msg.label_sys() << ' ';
     if (si.is_macos) cout << "macOS"; else if (si.is_linux) cout << "Linux"; else if (si.is_windows) cout << "Windows"; else cout << "Unknown";
-    cout << ", RAM約" << (si.ram_bytes/(1024ull*1024ull*1024ull)) << "GB";
-    if (si.vram_mb>0) cout << ", VRAM約" << (si.vram_mb/1024) << "GB"; else cout << ", VRAM不明";
+    cout << msg.label_ram_about() << (si.ram_bytes/(1024ull*1024ull*1024ull)) << "GB";
+    {
+        double unified_ratio = config.unified_gpu_ratio;
+        if (const char* env = getenv("AGENS_UNIFIED_GPU_RATIO")) { try { unified_ratio = stod(env); } catch (...) {} }
+        if (!(unified_ratio>0.0 && unified_ratio<1.0)) unified_ratio = 0.5;
+        if (si.vram_mb>0) {
+            cout << ", VRAM約" << (si.vram_mb/1024) << "GB";
+        } else if (si.is_macos && si.is_apple_silicon) {
+            uint64_t ram_gb = si.ram_bytes/(1024ull*1024ull*1024ull);
+            uint64_t est_gb = (ram_gb>=1) ? static_cast<uint64_t>(ram_gb*unified_ratio) : 1;
+            if (est_gb==0) est_gb = 1;
+            cout << msg.label_integrated_prefix() << est_gb << "GB)";
+        } else {
+            cout << msg.label_vram_unknown();
+        }
+    }
     if (si.is_apple_silicon) cout << ", Apple Silicon";
     if (!si.gpu_name.empty()) cout << ", GPU: " << si.gpu_name;
     cout << "\n";
-    print_tuning(tune);
+    print_tuning(tune, msg);
+    cout.flush();
 
     // バックエンド検出
     default_ports::Http http;
-    bool has_ollama = probe_ollama(http);
-    bool has_lms = probe_lmstudio(http);
+    bool has_ollama = backend::ollama::probe(http);
+    bool has_lms = backend::lmstudio::probe(http);
     vector<string> backends;
     if (has_ollama) backends.push_back("ollama");
     if (has_lms) backends.push_back("lmstudio");
     if (backends.empty()) {
-        cerr << "Ollama(11434)またはLM Studio(1234)のローカルAPIが見つかりません。\n";
-        cerr << "OllamaやLM Studioのサーバーを起動してから再度お試しください。\n";
+        cout << msg.api_missing1() << "\n";
+        cout << msg.api_missing2() << "\n";
+        cout.flush();
         return 1;
     }
 
@@ -113,8 +148,8 @@ int main(int argc, char** argv) {
 
     // モデル一覧
     vector<string> models;
-    if (backend=="ollama") models = list_ollama_models(http);
-    else models = list_lmstudio_models(http);
+    if (backend=="ollama") models = backend::ollama::list_models(http);
+    else models = backend::lmstudio::list_models(http);
 
     string model;
     if (!prefer_model.empty()) {
@@ -158,8 +193,8 @@ int main(int argc, char** argv) {
     // 単発プロンプト or REPL
     auto do_chat_once = [&](const string& user)->optional<string>{
         vector<ChatMsg> msgs = {{"system", system_jp}, {"user", user}};
-        if (backend=="ollama") return chat_ollama(http, model, msgs, tune);
-        return chat_lmstudio(http, model, msgs, tune);
+        if (backend=="ollama") return backend::ollama::chat(http, model, msgs, tune);
+        return backend::lmstudio::chat(http, model, msgs, tune);
     };
 
     if (!one_prompt.empty()) {
@@ -183,7 +218,7 @@ int main(int argc, char** argv) {
         if (user.rfind("/model",0)==0) {
             string arg = utils::trim(user.substr(6));
             if (arg.empty() || arg=="?" || arg=="list") {
-                vector<string> models2 = (backend=="ollama") ? list_ollama_models(http) : list_lmstudio_models(http);
+                vector<string> models2 = (backend=="ollama") ? backend::ollama::list_models(http) : backend::lmstudio::list_models(http);
                 if (models2.empty()) { cout << "[警告] モデル一覧を取得できませんでした。/model <名前> で直接指定してください。\n"; continue; }
                 cout << "利用可能なモデル:\n";
                 for (size_t i=0;i<models2.size();++i) cout << "  ["<<(i+1)<<"] "<<models2[i]<<"\n";
@@ -192,7 +227,7 @@ int main(int argc, char** argv) {
                 sel = utils::trim(sel);
                 if (sel.empty()) { cout << "[取消] 変更なし。\n"; continue; }
                 // 数字ならインデックス
-                bool all_digit = !sel.empty() && all_of(sel.begin(), sel.end(), ::isdigit);
+                bool all_digit = !sel.empty() && all_of(sel.begin(), sel.end(), [](unsigned char c){ return std::isdigit(c); });
                 string chosen = sel;
                 if (all_digit) {
                     try {

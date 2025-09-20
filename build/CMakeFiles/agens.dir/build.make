@@ -86,129 +86,18 @@ CMakeFiles/agens.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/main.cpp -o CMakeFiles/agens.dir/src/main.cpp.s
 
-CMakeFiles/agens.dir/src/system_info.cpp.o: CMakeFiles/agens.dir/flags.make
-CMakeFiles/agens.dir/src/system_info.cpp.o: /Users/hiro/Projetct/GitHub/agens/src/system_info.cpp
-CMakeFiles/agens.dir/src/system_info.cpp.o: CMakeFiles/agens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/agens.dir/src/system_info.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/agens.dir/src/system_info.cpp.o -MF CMakeFiles/agens.dir/src/system_info.cpp.o.d -o CMakeFiles/agens.dir/src/system_info.cpp.o -c /Users/hiro/Projetct/GitHub/agens/src/system_info.cpp
-
-CMakeFiles/agens.dir/src/system_info.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/agens.dir/src/system_info.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/hiro/Projetct/GitHub/agens/src/system_info.cpp > CMakeFiles/agens.dir/src/system_info.cpp.i
-
-CMakeFiles/agens.dir/src/system_info.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/system_info.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/system_info.cpp -o CMakeFiles/agens.dir/src/system_info.cpp.s
-
-CMakeFiles/agens.dir/src/chat.cpp.o: CMakeFiles/agens.dir/flags.make
-CMakeFiles/agens.dir/src/chat.cpp.o: /Users/hiro/Projetct/GitHub/agens/src/chat.cpp
-CMakeFiles/agens.dir/src/chat.cpp.o: CMakeFiles/agens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/agens.dir/src/chat.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/agens.dir/src/chat.cpp.o -MF CMakeFiles/agens.dir/src/chat.cpp.o.d -o CMakeFiles/agens.dir/src/chat.cpp.o -c /Users/hiro/Projetct/GitHub/agens/src/chat.cpp
-
-CMakeFiles/agens.dir/src/chat.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/agens.dir/src/chat.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/hiro/Projetct/GitHub/agens/src/chat.cpp > CMakeFiles/agens.dir/src/chat.cpp.i
-
-CMakeFiles/agens.dir/src/chat.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/chat.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/chat.cpp -o CMakeFiles/agens.dir/src/chat.cpp.s
-
-CMakeFiles/agens.dir/src/backend.cpp.o: CMakeFiles/agens.dir/flags.make
-CMakeFiles/agens.dir/src/backend.cpp.o: /Users/hiro/Projetct/GitHub/agens/src/backend.cpp
-CMakeFiles/agens.dir/src/backend.cpp.o: CMakeFiles/agens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/agens.dir/src/backend.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/agens.dir/src/backend.cpp.o -MF CMakeFiles/agens.dir/src/backend.cpp.o.d -o CMakeFiles/agens.dir/src/backend.cpp.o -c /Users/hiro/Projetct/GitHub/agens/src/backend.cpp
-
-CMakeFiles/agens.dir/src/backend.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/agens.dir/src/backend.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/hiro/Projetct/GitHub/agens/src/backend.cpp > CMakeFiles/agens.dir/src/backend.cpp.i
-
-CMakeFiles/agens.dir/src/backend.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/backend.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/backend.cpp -o CMakeFiles/agens.dir/src/backend.cpp.s
-
-CMakeFiles/agens.dir/src/web_search.cpp.o: CMakeFiles/agens.dir/flags.make
-CMakeFiles/agens.dir/src/web_search.cpp.o: /Users/hiro/Projetct/GitHub/agens/src/web_search.cpp
-CMakeFiles/agens.dir/src/web_search.cpp.o: CMakeFiles/agens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/agens.dir/src/web_search.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/agens.dir/src/web_search.cpp.o -MF CMakeFiles/agens.dir/src/web_search.cpp.o.d -o CMakeFiles/agens.dir/src/web_search.cpp.o -c /Users/hiro/Projetct/GitHub/agens/src/web_search.cpp
-
-CMakeFiles/agens.dir/src/web_search.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/agens.dir/src/web_search.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/hiro/Projetct/GitHub/agens/src/web_search.cpp > CMakeFiles/agens.dir/src/web_search.cpp.i
-
-CMakeFiles/agens.dir/src/web_search.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/web_search.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/web_search.cpp -o CMakeFiles/agens.dir/src/web_search.cpp.s
-
-CMakeFiles/agens.dir/src/file_finder.cpp.o: CMakeFiles/agens.dir/flags.make
-CMakeFiles/agens.dir/src/file_finder.cpp.o: /Users/hiro/Projetct/GitHub/agens/src/file_finder.cpp
-CMakeFiles/agens.dir/src/file_finder.cpp.o: CMakeFiles/agens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/agens.dir/src/file_finder.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/agens.dir/src/file_finder.cpp.o -MF CMakeFiles/agens.dir/src/file_finder.cpp.o.d -o CMakeFiles/agens.dir/src/file_finder.cpp.o -c /Users/hiro/Projetct/GitHub/agens/src/file_finder.cpp
-
-CMakeFiles/agens.dir/src/file_finder.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/agens.dir/src/file_finder.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/hiro/Projetct/GitHub/agens/src/file_finder.cpp > CMakeFiles/agens.dir/src/file_finder.cpp.i
-
-CMakeFiles/agens.dir/src/file_finder.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/file_finder.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/file_finder.cpp -o CMakeFiles/agens.dir/src/file_finder.cpp.s
-
-CMakeFiles/agens.dir/src/agent_mode.cpp.o: CMakeFiles/agens.dir/flags.make
-CMakeFiles/agens.dir/src/agent_mode.cpp.o: /Users/hiro/Projetct/GitHub/agens/src/agent_mode.cpp
-CMakeFiles/agens.dir/src/agent_mode.cpp.o: CMakeFiles/agens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/agens.dir/src/agent_mode.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/agens.dir/src/agent_mode.cpp.o -MF CMakeFiles/agens.dir/src/agent_mode.cpp.o.d -o CMakeFiles/agens.dir/src/agent_mode.cpp.o -c /Users/hiro/Projetct/GitHub/agens/src/agent_mode.cpp
-
-CMakeFiles/agens.dir/src/agent_mode.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/agens.dir/src/agent_mode.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/hiro/Projetct/GitHub/agens/src/agent_mode.cpp > CMakeFiles/agens.dir/src/agent_mode.cpp.i
-
-CMakeFiles/agens.dir/src/agent_mode.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/agent_mode.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/agent_mode.cpp -o CMakeFiles/agens.dir/src/agent_mode.cpp.s
-
-CMakeFiles/agens.dir/src/config.cpp.o: CMakeFiles/agens.dir/flags.make
-CMakeFiles/agens.dir/src/config.cpp.o: /Users/hiro/Projetct/GitHub/agens/src/config.cpp
-CMakeFiles/agens.dir/src/config.cpp.o: CMakeFiles/agens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/agens.dir/src/config.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/agens.dir/src/config.cpp.o -MF CMakeFiles/agens.dir/src/config.cpp.o.d -o CMakeFiles/agens.dir/src/config.cpp.o -c /Users/hiro/Projetct/GitHub/agens/src/config.cpp
-
-CMakeFiles/agens.dir/src/config.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/agens.dir/src/config.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/hiro/Projetct/GitHub/agens/src/config.cpp > CMakeFiles/agens.dir/src/config.cpp.i
-
-CMakeFiles/agens.dir/src/config.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/agens.dir/src/config.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/hiro/Projetct/GitHub/agens/src/config.cpp -o CMakeFiles/agens.dir/src/config.cpp.s
-
 # Object files for target agens
 agens_OBJECTS = \
-"CMakeFiles/agens.dir/src/main.cpp.o" \
-"CMakeFiles/agens.dir/src/system_info.cpp.o" \
-"CMakeFiles/agens.dir/src/chat.cpp.o" \
-"CMakeFiles/agens.dir/src/backend.cpp.o" \
-"CMakeFiles/agens.dir/src/web_search.cpp.o" \
-"CMakeFiles/agens.dir/src/file_finder.cpp.o" \
-"CMakeFiles/agens.dir/src/agent_mode.cpp.o" \
-"CMakeFiles/agens.dir/src/config.cpp.o"
+"CMakeFiles/agens.dir/src/main.cpp.o"
 
 # External object files for target agens
 agens_EXTERNAL_OBJECTS =
 
 agens: CMakeFiles/agens.dir/src/main.cpp.o
-agens: CMakeFiles/agens.dir/src/system_info.cpp.o
-agens: CMakeFiles/agens.dir/src/chat.cpp.o
-agens: CMakeFiles/agens.dir/src/backend.cpp.o
-agens: CMakeFiles/agens.dir/src/web_search.cpp.o
-agens: CMakeFiles/agens.dir/src/file_finder.cpp.o
-agens: CMakeFiles/agens.dir/src/agent_mode.cpp.o
-agens: CMakeFiles/agens.dir/src/config.cpp.o
 agens: CMakeFiles/agens.dir/build.make
+agens: libagens_lib.a
 agens: CMakeFiles/agens.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable agens"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/hiro/Projetct/GitHub/agens/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable agens"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/agens.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

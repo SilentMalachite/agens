@@ -37,11 +37,23 @@ SystemInfo detect_system_info() {
         string out = utils::run_shell("sysctl -n hw.memsize 2>/dev/null");
         if (!out.empty()) {
             // bytes
-            try {
-                si.ram_bytes = std::stoull(out);
-            } catch (const std::exception&) {
-                // パース失敗時はRAMを0のままにする
-                si.ram_bytes = 0;
+            try { si.ram_bytes = std::stoull(out); } catch (const std::exception&) { si.ram_bytes = 0; }
+        }
+        // Fallback: system_profiler SPHardwareDataType の "Memory:" 行から取得（例: "Memory: 32 GB" / 日本語環境: "メモリ: 32 GB"）
+        if (si.ram_bytes == 0) {
+            string hw = utils::run_shell("system_profiler SPHardwareDataType 2>/dev/null");
+            // メモリ値抽出
+            {
+                istringstream iss(hw); string line;
+                while (getline(iss, line)) {
+                    string low = line; transform(low.begin(), low.end(), low.begin(), ::tolower);
+                    if (low.find("memory:") != string::npos || low.find("メモリ:") != string::npos) {
+                        uint64_t v = parse_first_uint_in_text_mb(line);
+                        if (line.find("GB") != string::npos && v > 0) si.ram_bytes = v * 1024ull * 1024ull * 1024ull;
+                        else if (line.find("MB") != string::npos && v > 0) si.ram_bytes = v * 1024ull * 1024ull;
+                        break;
+                    }
+                }
             }
         }
         string arch = utils::run_shell("uname -m");
@@ -60,18 +72,18 @@ SystemInfo detect_system_info() {
             if (tail.find("GB") != string::npos && v > 0) v *= 1024;
             si.vram_mb = v;
         }
-        // GPU名（1行目に表示名があることが多い）
+        // GPU名（Chipset Model優先。見つからなければ内容のある行のみ採用）
         {
-            // 行単位で"Chipset Model"や"チップセットのモデル"等を拾う
             std::istringstream iss(sp);
             std::string line;
+            std::string candidate;
             while (std::getline(iss, line)) {
                 auto low = line; transform(low.begin(), low.end(), low.begin(), ::tolower);
-                if (low.find("chipset") != string::npos || low.find("graphics") != string::npos) {
-                    si.gpu_name = line;
-                    break;
-                }
+                auto has_value_after_colon = [&](){ auto p=line.find(':'); if (p==string::npos) return false; auto rest=utils::trim(line.substr(p+1)); return !rest.empty(); }();
+                if (low.find("chipset model") != string::npos && has_value_after_colon) { si.gpu_name = line; break; }
+                if (candidate.empty() && (low.find("model:")!=string::npos || low.find("graphics")!=string::npos) && has_value_after_colon) candidate = line;
             }
+            if (si.gpu_name.empty()) si.gpu_name = candidate; // 何もなければ空のまま
         }
         // NVIDIA存在確認（外付けeGPUなど）
         string nv = utils::run_shell("which nvidia-smi >/dev/null 2>&1 && nvidia-smi -L 2>/dev/null");
@@ -216,10 +228,19 @@ SystemInfo detect_system_info_with(IShell& shell,
     if (si.is_macos) {
         std::string out = shell.run("sysctl -n hw.memsize 2>/dev/null");
         if (!out.empty()) { 
-            try { 
-                si.ram_bytes = std::stoull(out); 
-            } catch (const std::exception&) {
-                si.ram_bytes = 0;
+            try { si.ram_bytes = std::stoull(out); } catch (const std::exception&) { si.ram_bytes = 0; }
+        }
+        if (si.ram_bytes == 0) {
+            std::string hw = shell.run("system_profiler SPHardwareDataType 2>/dev/null");
+            std::istringstream iss(hw); std::string line;
+            while (std::getline(iss, line)) {
+                std::string low = line; std::transform(low.begin(), low.end(), low.begin(), ::tolower);
+                if (low.find("memory:") != std::string::npos || low.find("メモリ:") != std::string::npos) {
+                    uint64_t v = parse_first_uint_in_text_mb(line);
+                    if (line.find("GB") != std::string::npos && v > 0) si.ram_bytes = v * 1024ull * 1024ull * 1024ull;
+                    else if (line.find("MB") != std::string::npos && v > 0) si.ram_bytes = v * 1024ull * 1024ull;
+                    break;
+                }
             }
         }
         std::string arch = shell.run("uname -m");
@@ -235,11 +256,14 @@ SystemInfo detect_system_info_with(IShell& shell,
             si.vram_mb = v;
         }
         {
-            std::istringstream iss(sp); std::string line;
+            std::istringstream iss(sp); std::string line; std::string candidate;
             while (std::getline(iss, line)) {
                 auto low = line; std::transform(low.begin(), low.end(), low.begin(), ::tolower);
-                if (low.find("chipset") != std::string::npos || low.find("graphics") != std::string::npos) { si.gpu_name = line; break; }
+                auto has_value_after_colon = [&](){ auto p=line.find(':'); if (p==std::string::npos) return false; auto rest=utils::trim(line.substr(p+1)); return !rest.empty(); }();
+                if (low.find("chipset model") != std::string::npos && has_value_after_colon) { si.gpu_name = line; break; }
+                if (candidate.empty() && (low.find("model:")!=std::string::npos || low.find("graphics")!=std::string::npos) && has_value_after_colon) candidate = line;
             }
+            if (si.gpu_name.empty()) si.gpu_name = candidate;
         }
         std::string nv = shell.run("which nvidia-smi >/dev/null 2>&1 && nvidia-smi -L 2>/dev/null");
         si.has_nvidia = !nv.empty();

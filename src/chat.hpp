@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <optional>
 #include "system_info.hpp"
 
 struct ChatMsg { std::string role; std::string content; };

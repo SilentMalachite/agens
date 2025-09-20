@@ -90,6 +90,16 @@ REPL中のコマンド:
 
 注: 空行は無視し、終了コマンド（`/exit`または`/quit`）を受け付けるまで待機し続けます。
 
+## 環境変数
+
+- `AGENS_LANG`: UIメッセージの言語を切り替えます。
+  - 値: `ja`（既定）| `en`
+  - 例: `AGENS_LANG=en ./agens -h`
+- `AGENS_UNIFIED_GPU_RATIO`: Apple Silicon 等の統合メモリ環境で、GPUが利用可能とみなすRAM比率（0<ratio<1）。
+  - 既定: `0.5`（RAMの50%を目安にGPU利用可能量として表示）
+  - 例: `AGENS_UNIFIED_GPU_RATIO=0.25 ./agens -p "hi"`
+  - 設定ファイル（`~/.config/agens/config.json` など）の `unified_gpu_ratio` でも指定可能（環境変数が優先）。
+
 ## 実装メモ
 
 - HTTPは `curl` をサブプロセス実行（`src/utils.hpp`）。POSTは一時JSONファイルを介してクロスプラットフォームで安定化。
@@ -109,7 +119,7 @@ REPL中のコマンド:
 
 ## ライセンス
 
-このリポジトリのコードはサンプルとして提供されます。必要に応じて改変してご利用ください。
+このプロジェクトは Apache License 2.0 の下で提供されます。詳細は `LICENSE` を参照してください。
 
 ## テスト
 

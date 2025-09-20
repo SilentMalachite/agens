@@ -18,8 +18,9 @@ static string url_encode(const string& s) {
 vector<WebResult> web_search(IHttp& http, const string& query, int max_results) {
     vector<WebResult> out;
     string url = string("https://api.duckduckgo.com/?q=") + url_encode(query) + "&format=json&no_html=1&skip_disambig=1&t=agens&kl=jp-jp";
-    string body = http.get(url);
-    if (body.empty()) return out;
+    auto body_opt = http.get(url);
+    if (!body_opt) return out;
+    const string& body = *body_opt;
 
     // AbstractText / AbstractURL / Heading
     string abstract, aurl, heading;

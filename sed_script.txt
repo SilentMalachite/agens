@@ -1,0 +1,1 @@
+s|return nullopt; // Don't return raw response on parse failure|return resp;|

@@ -1,0 +1,34 @@
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+*.code-workspace
+
+# CMake / build
+build/
+build-asan/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+compile_commands.json
+Testing/
+
+# Binaries / libs
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.obj
+*.o
+*.lo
+
+# Logs / coverage
+*.log
+*.gcno
+*.gcda
+*.gcov
+

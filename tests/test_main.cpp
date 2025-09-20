@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <fstream>
 
 #include "system_info.hpp"
 #include "chat.hpp"
@@ -31,13 +32,13 @@ int main() {
     struct MockHttp : IHttp {
         std::vector<std::pair<std::string,std::string>> map_get;
         std::vector<std::pair<std::string,std::string>> map_post;
-        std::string get(const std::string& url, const std::vector<std::string>& headers = {}) override {
+        std::optional<std::string> get(const std::string& url, const std::vector<std::string>& headers = {}) override {
             (void)headers;
-            for (auto& kv : map_get) if (kv.first==url) return kv.second; return std::string();
+            for (auto& kv : map_get) if (kv.first==url) return kv.second; return std::nullopt;
         }
-        std::string post_json(const std::string& url, const std::string& json, const std::vector<std::string>& headers = {}) override {
+        std::optional<std::string> post_json(const std::string& url, const std::string& json, const std::vector<std::string>& headers = {}) override {
             (void)json; (void)headers;
-            for (auto& kv : map_post) if (kv.first==url) return kv.second; return std::string();
+            for (auto& kv : map_post) if (kv.first==url) return kv.second; return std::nullopt;
         }
         void on_get(const std::string& url, const std::string& resp) { map_get.emplace_back(url, resp); }
         void on_post(const std::string& url, const std::string& resp) { map_post.emplace_back(url, resp); }
@@ -46,20 +47,20 @@ int main() {
     // モデル一覧（Ollama）
     {
         MockHttp http; http.on_get("http://localhost:11434/api/tags", "{\"models\":[{\"name\":\"llama3:instruct\"},{\"name\":\"mistral:7b\"}]} ");
-        auto v = list_ollama_models(http);
+        auto v = backend::ollama::list_models(http);
         REQUIRE(v.size()==2);
     }
     // モデル一覧（LM Studio）
     {
         MockHttp http; http.on_get("http://localhost:1234/v1/models", "{\"data\":[{\"id\":\"TheBloke/Mistral\"},{\"id\":\"local-model\"}]} ");
-        auto v = list_lmstudio_models(http);
+        auto v = backend::lmstudio::list_models(http);
         REQUIRE(v.size()==2);
     }
     // チャット（Ollama）
     {
         MockHttp http; http.on_post("http://localhost:11434/api/chat", "{\"message\":{\"role\":\"assistant\",\"content\":\"こんにちは世界\"}} ");
         InferenceTuning t; std::vector<ChatMsg> msgs = {{"system","日本語で"},{"user","テスト"}};
-        auto out = chat_ollama(http, "m", msgs, t);
+        auto out = backend::ollama::chat(http, "m", msgs, t);
         REQUIRE(out.has_value());
         REQUIRE(out->find("こんにちは")!=std::string::npos);
     }
@@ -67,7 +68,7 @@ int main() {
     {
         MockHttp http; http.on_post("http://localhost:1234/v1/chat/completions", "{\"choices\":[{\"message\":{\"role\":\"assistant\",\"content\":\"了解です\"}}]} ");
         InferenceTuning t; std::vector<ChatMsg> msgs = {{"system","日本語で"},{"user","テスト"}};
-        auto out = chat_lmstudio(http, "m", msgs, t);
+        auto out = backend::lmstudio::chat(http, "m", msgs, t);
         REQUIRE(out.has_value());
         REQUIRE(out->find("了解")!=std::string::npos);
     }
@@ -92,6 +93,87 @@ int main() {
         REQUIRE(!si.has_nvidia);
         REQUIRE_EQ(si.vram_mb, 0);
         REQUIRE(si.ram_bytes > 3ull*1024ull*1024ull*1024ull);
+    }
+
+    // macOS: sysctl失敗時のRAMフォールバックとGPU名抽出
+    {
+        MockShell sh;
+        // sysctl は空（失敗想定）
+        sh.on("sysctl -n hw.memsize 2>/dev/null", "");
+        sh.on("uname -m", "arm64\n");
+        sh.on("sysctl -n machdep.cpu.brand_string 2>/dev/null", "Apple M1 Max\n");
+        // ハードウェア情報（RAM=16GB）
+        sh.on("system_profiler SPHardwareDataType 2>/dev/null", "Hardware:\n\n      Memory: 16 GB\n");
+        // ディスプレイ情報（ヘッダ行とチップセット行の両方を含む）
+        sh.on("system_profiler SPDisplaysDataType 2>/dev/null", "Graphics/Displays:\n\n    Apple M1 Max:\n      Chipset Model: Apple M1 Max\n      Metal: Supported\n");
+        // NVIDIAなし
+        sh.on("which nvidia-smi >/dev/null 2>&1 && nvidia-smi -L 2>/dev/null", "");
+
+        auto si = detect_system_info_with(sh, rf, true, false, false);
+        REQUIRE(si.is_macos);
+        REQUIRE(si.is_apple_silicon);
+        REQUIRE(si.ram_bytes >= (16ull<<30));
+        REQUIRE(si.gpu_name.find("Chipset Model")!=std::string::npos);
+    }
+
+    // macOS: SPDisplaysDataType の "VRAM (Total): 24 GB" を正しくMiB換算
+    {
+        MockShell sh;
+        // RAMはsysctlで正常取得（32GB）
+        sh.on("sysctl -n hw.memsize 2>/dev/null", "34359738368\n");
+        sh.on("uname -m", "x86_64\n");
+        sh.on("sysctl -n machdep.cpu.brand_string 2>/dev/null", "Intel(R) CPU\n");
+        // VRAM 24GB を含む出力
+        sh.on("system_profiler SPDisplaysDataType 2>/dev/null",
+              "Graphics/Displays:\n\n    AMD Radeon:\n      Chipset Model: Radeon Pro\n      VRAM (Total): 24 GB\n");
+        sh.on("which nvidia-smi >/dev/null 2>&1 && nvidia-smi -L 2>/dev/null", "");
+
+        auto si = detect_system_info_with(sh, rf, true, false, false);
+        REQUIRE(si.is_macos);
+        REQUIRE_EQ(si.vram_mb, 24u*1024u);
+    }
+
+    // macOS: 日本語表記（全角カッコ含む）でのVRAM検出（MB単位）
+    {
+        MockShell sh;
+        sh.on("sysctl -n hw.memsize 2>/dev/null", "17179869184\n"); // 16GB
+        sh.on("uname - m", "arm64\n"); // 注意: 想定外コマンドを返さない（空で可）
+        sh.on("sysctl - n machdep.cpu.brand_string 2>/dev/null", ""); // 空
+        sh.on("system_profiler SPDisplaysDataType 2>/dev/null",
+              "Graphics/Displays:\n  VRAM（合計）: 15360 MB\n");
+        sh.on("which nvidia-smi >/dev/null 2>&1 && nvidia-smi -L 2>/dev/null", "");
+        auto si = detect_system_info_with(sh, rf, true, false, false);
+        REQUIRE(si.is_macos);
+        REQUIRE_EQ(si.vram_mb, 15360u);
+    }
+
+    // Linux: AMDなど非NVIDIAの場合はVRAMは不明（0のまま）
+    {
+        MockShell sh;
+        sh.on("which nvidia-smi >/dev/null 2>&1 && nvidia-smi -L 2>/dev/null", "");
+        auto read_file = [&](const std::string& path){ (void)path; return std::string("MemTotal:       16000000 kB\n"); };
+        auto si = detect_system_info_with(sh, read_file, false, true, false);
+        REQUIRE(si.is_linux);
+        REQUIRE_EQ(si.vram_mb, 0u);
+    }
+
+    // Windows: NVIDIAなし時のAdapterRAM/Name取得
+    {
+        MockShell sh;
+        // wmic 失敗 → PowerShell CIM にフォールバック
+        sh.on("wmic computersystem get TotalPhysicalMemory /value 2>NUL", "");
+        sh.on("powershell -NoProfile -Command \"(Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory\" 2>NUL",
+              "17179869184\n"); // 16GB
+        // NVIDIAなし
+        sh.on("nvidia-smi -L 2>NUL", "");
+        // iGPU 情報
+        sh.on("powershell -NoProfile -Command \"Get-CimInstance Win32_VideoController | Select-Object -First 1 AdapterRAM,Name | ConvertTo-Json\" 2>NUL",
+              "{\"AdapterRAM\":4293918720,\"Name\":\"Intel(R) Iris(R) Xe Graphics\"}\n");
+
+        auto si = detect_system_info_with(sh, rf, false, false, true);
+        REQUIRE(si.is_windows);
+        REQUIRE(si.vram_mb >= 3500); // 4GB近辺（切り捨て誤差考慮）
+        REQUIRE(si.gpu_name.find("Intel")!=std::string::npos);
     }
 
     // Linux: NVIDIAあり
@@ -212,6 +294,14 @@ int main() {
         REQUIRE_EQ(t.max_tokens, 512);
     }
 
+    // utils helpers (trim, escapes)
+    {
+        REQUIRE_EQ(utils::trim("  a b  "), "a b");
+        REQUIRE_EQ(utils::trim("\n\t c \r\n"), "c");
+        REQUIRE_EQ(utils::escape_double_quotes("a\"b"), "a\\\"b");
+        REQUIRE_EQ(utils::shell_escape_single_quotes("a'b"), "'a'\"'\"'b'");
+    }
+
     // utils JSON helpers
     {
         std::string body = "{\"models\":[{\"name\":\"a\"},{\"name\":\"b\"}] }";
@@ -225,21 +315,31 @@ int main() {
         REQUIRE(ok && out=="こんにちは");
     }
 
+    // APIエラーケース
+    {
+        MockHttp http; // 常に空を返す
+        auto models = backend::ollama::list_models(http);
+        REQUIRE(models.empty());
+        InferenceTuning t; std::vector<ChatMsg> msgs;
+        auto chat = backend::lmstudio::chat(http, "m", msgs, t);
+        REQUIRE(!chat.has_value());
+    }
+
     // Optional integration tests (enable with env vars)
     if (const char* ollama = std::getenv("LLM_OLLAMA")) {
         std::string base = ollama; // e.g. http://localhost:11434
         auto ver = utils::http_get(base + std::string("/api/version"));
-        REQUIRE(!ver.empty());
+        REQUIRE(ver.has_value() && !ver->empty());
     }
 
     // web_search パース（MockHttp）
     {
         struct MockHttp : IHttp {
-            std::string body;
-            std::string get(const std::string& url, const std::vector<std::string>& headers = {}) override {
+            std::optional<std::string> body;
+            std::optional<std::string> get(const std::string& url, const std::vector<std::string>& headers = {}) override {
                 (void)url; (void)headers; return body; }
-            std::string post_json(const std::string& url, const std::string& json, const std::vector<std::string>& headers = {}) override {
-                (void)url; (void)json; (void)headers; return std::string(); }
+            std::optional<std::string> post_json(const std::string& url, const std::string& json, const std::vector<std::string>& headers = {}) override {
+                (void)url; (void)json; (void)headers; return std::nullopt; }
         } http;
         http.body = "{\"Heading\":\"テスト\",\"AbstractText\":\"概要\",\"AbstractURL\":\"https://example.com\",\"RelatedTopics\":[{\"FirstURL\":\"https://a\",\"Text\":\"A\"},{\"FirstURL\":\"https://b\",\"Text\":\"B\"}]}";
         auto results = web_search(http, "dummy", 3);
@@ -266,7 +366,7 @@ int main() {
     if (const char* lms = std::getenv("LLM_LMSTUDIO")) {
         std::string base = lms; // e.g. http://localhost:1234/v1
         auto models = utils::http_get(base + std::string("/models"), {"Authorization: Bearer lm-studio"});
-        REQUIRE(!models.empty());
+        REQUIRE(models.has_value() && !models->empty());
     }
 
     if (failures==0) {
