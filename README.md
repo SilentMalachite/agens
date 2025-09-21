@@ -1,4 +1,4 @@
-# ローカルLLMエージェント（C++20）
+# Agens ローカルLLMエージェント（C++20）
 
 インストール済みの OLLAMA と LM Studio のローカルAPIに接続し、
 システム要件（GPU/VRAM/RAM/Apple Silicon）を検出して推論パラメータを自動調整する、日本語応答専用の対話エージェントです。
