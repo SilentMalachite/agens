@@ -39,12 +39,25 @@ int run_shell_with_status(const std::string& cmd, std::string& result) {
 #else
     FILE* pipe = popen(cmd.c_str(), "r");
 #endif
-    if (!pipe) throw std::runtime_error("popen() failed");
-    while (true) {
-        size_t n = fread(buffer.data(), 1, buffer.size(), pipe);
-        if (n > 0) result.append(buffer.data(), n);
-        if (n < buffer.size()) break;
+    if (!pipe) {
+        throw std::runtime_error("popen() failed");
     }
+
+    try {
+        while (true) {
+            size_t n = fread(buffer.data(), 1, buffer.size(), pipe);
+            if (n > 0) result.append(buffer.data(), n);
+            if (n < buffer.size()) break;
+        }
+    } catch (...) {
+#if defined(_WIN32)
+        _pclose(pipe);
+#else
+        pclose(pipe);
+#endif
+        throw;
+    }
+
     int rc;
 #if defined(_WIN32)
     rc = _pclose(pipe);

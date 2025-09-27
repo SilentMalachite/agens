@@ -11,12 +11,21 @@ namespace ollama {
 
 bool probe(IHttp& http) {
     auto body = http.get("http://localhost:11434/api/version");
-    return body.has_value() && body->find("version") != string::npos;
+    if (!body.has_value()) return false;
+
+    // Check for error response
+    if (body->find("error") != string::npos) return false;
+
+    return body->find("version") != string::npos;
 }
 
 vector<string> list_models(IHttp& http) {
     auto body = http.get("http://localhost:11434/api/tags");
     if (!body) return {};
+
+    // Check for error response
+    if (body->find("error") != string::npos) return {};
+
     auto names = utils::json_collect_string_values(*body, "name");
     sort(names.begin(), names.end());
     names.erase(unique(names.begin(), names.end()), names.end());
@@ -41,13 +50,22 @@ bool probe(IHttp& http) {
     if (!body.has_value() || body->find("error") != string::npos) {
         body = http.get("http://localhost:1234/v1/models");
     }
-    return body.has_value() && (body->find("data") != string::npos || body->find("object") != string::npos);
+    if (!body.has_value()) return false;
+
+    // Check for error response
+    if (body->find("error") != string::npos) return false;
+
+    return (body->find("data") != string::npos || body->find("object") != string::npos);
 }
 
 vector<string> list_models(IHttp& http) {
     auto body = http.get("http://localhost:1234/v1/models", {"Authorization: Bearer lm-studio"});
     if (!body.has_value() || body->find("error")!=string::npos) body = http.get("http://localhost:1234/v1/models");
     if (!body) return {};
+
+    // Check for error response
+    if (body->find("error") != string::npos) return {};
+
     auto ids = utils::json_collect_string_values(*body, "id");
     sort(ids.begin(), ids.end());
     ids.erase(unique(ids.begin(), ids.end()), ids.end());

@@ -37,7 +37,13 @@ SystemInfo detect_system_info() {
         string out = utils::run_shell("sysctl -n hw.memsize 2>/dev/null");
         if (!out.empty()) {
             // bytes
-            try { si.ram_bytes = std::stoull(out); } catch (const std::exception&) { si.ram_bytes = 0; }
+            try {
+                si.ram_bytes = std::stoull(out);
+            } catch (const std::invalid_argument&) {
+                si.ram_bytes = 0;
+            } catch (const std::out_of_range&) {
+                si.ram_bytes = 0;
+            }
         }
         // Fallback: system_profiler SPHardwareDataType の "Memory:" 行から取得（例: "Memory: 32 GB" / 日本語環境: "メモリ: 32 GB"）
         if (si.ram_bytes == 0) {
@@ -127,10 +133,12 @@ SystemInfo detect_system_info() {
         }
         {
             std::string digits; for (char c: out) if (isdigit((unsigned char)c)) digits += c;
-            if (!digits.empty()) { 
-                try { 
-                    si.ram_bytes = std::stoull(digits); 
-                } catch (const std::exception&) {
+            if (!digits.empty()) {
+                try {
+                    si.ram_bytes = std::stoull(digits);
+                } catch (const std::invalid_argument&) {
+                    si.ram_bytes = 0;
+                } catch (const std::out_of_range&) {
                     si.ram_bytes = 0;
                 }
             }
@@ -151,10 +159,12 @@ SystemInfo detect_system_info() {
             {
                 std::string digits; for (char c: json) if (isdigit((unsigned char)c)) digits += c;
                 if (!digits.empty()) {
-                    try { 
-                        uint64_t bytes = std::stoull(digits); 
-                        si.vram_mb = bytes / (1024ull*1024ull); 
-                    } catch(const std::exception&) {
+                    try {
+                        uint64_t bytes = std::stoull(digits);
+                        si.vram_mb = bytes / (1024ull*1024ull);
+                    } catch (const std::invalid_argument&) {
+                        si.vram_mb = 0;
+                    } catch (const std::out_of_range&) {
                         si.vram_mb = 0;
                     }
                 }
