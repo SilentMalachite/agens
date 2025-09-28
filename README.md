@@ -18,6 +18,25 @@
   - 実行許可/拒否リスト管理: `/allow ...` `/deny ...`
   - 設定ファイルのロード/保存/パス表示: `/config reload|save|path`
 
+## 開発・品質管理
+
+### ビルドとテスト
+- 継続的インテグレーション: GitHub Actions（Linux/macOS/Windows）
+- AddressSanitizer/UndefinedBehaviorSanitizer（デバッグビルド時）
+- 静的解析: clang-tidy
+- ユニットテスト及び統合テスト
+
+### コード品質
+- C++20標準準拠
+- Memory safety（RAII、スマートポインタ）
+- エラーハンドリング（std::optional、例外安全）
+- クロスプラットフォーム対応
+
+### 既知の制限・改善点
+- 大規模なLLMモデルでは推論時間が長くなる可能性
+- Web検索はDuckDuckGo Instant Answer APIに依存
+- JSON解析は軽量実装のため、複雑な構造では制限あり
+
 ## ビルド
 
 - 依存: CMake(>=3.16), C++20対応コンパイラ, `curl` コマンド

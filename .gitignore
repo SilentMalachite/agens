@@ -6,7 +6,9 @@
 
 # CMake / build
 build/
+build-*/
 build-asan/
+build-wo-san/
 cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
@@ -14,6 +16,10 @@ Makefile
 cmake_install.cmake
 compile_commands.json
 Testing/
+
+# Cache directories
+.cache/
+.serena/
 
 # Binaries / libs
 *.exe

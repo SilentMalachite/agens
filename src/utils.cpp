@@ -120,7 +120,7 @@ std::optional<std::string> http_post_json(const std::string& url, const std::str
         ofs << json_body;
     }
     const std::string kMarker = "__STATUS_CODE__:";
-    std::string cmd = "curl -sS --connect-timeout 2 --max-time 60 --fail-with-body -w \"" + kMarker + "%{http_code}\" -X POST";
+    std::string cmd = "curl -sS --connect-timeout 2 --max-time 10 --fail-with-body -w \"" + kMarker + "%{http_code}\" -X POST";
     cmd += " -H \"Content-Type: application/json\"";
     for (const auto& h : headers) {
         cmd += " -H \"" + escape_double_quotes(h) + "\"";

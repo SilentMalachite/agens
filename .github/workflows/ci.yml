@@ -49,3 +49,25 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: ctest --test-dir build -j2 --output-on-failure
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Install clang-tidy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+          
+      - name: Configure with compile commands
+        run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        
+      - name: Build
+        run: cmake --build build -j
+        
+      - name: Run clang-tidy
+        run: |
+          find src/ -name "*.cpp" -exec clang-tidy {} -p build \;

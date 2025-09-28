@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
 
     string backend;
     if (!prefer_backend.empty()) backend = prefer_backend;
-    else if (!config.last_backend.empty()) backend = config.last_backend;
+    else if (!config.last_backend.empty() && find(backends.begin(), backends.end(), config.last_backend) != backends.end()) backend = config.last_backend;
     else if (backends.size()==1) backend = backends[0];
     else {
         cout << "利用するバックエンドを選択してください: \n";
