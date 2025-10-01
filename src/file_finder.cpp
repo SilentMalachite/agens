@@ -49,7 +49,11 @@ vector<FileHit> find_relevant_files(const string& base_dir, const string& query,
         ifstream ifs(path, ios::binary);
         if (!ifs) continue;
         string content_prefix; content_prefix.resize(64*1024);
-        ifs.read(content_prefix.data(), content_prefix.size()); size_t rd = ifs.gcount(); content_prefix.resize(rd);
+        ifs.read(content_prefix.data(), content_prefix.size()); 
+        if (ifs.bad()) {
+            continue; // Skip files with read errors
+        }
+        size_t rd = ifs.gcount(); content_prefix.resize(rd);
         if (is_binary_prefix(content_prefix)) continue;
         string all = content_prefix;
         // if small file, read all

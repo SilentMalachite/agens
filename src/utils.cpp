@@ -47,7 +47,12 @@ int run_shell_with_status(const std::string& cmd, std::string& result) {
         while (true) {
             size_t n = fread(buffer.data(), 1, buffer.size(), pipe);
             if (n > 0) result.append(buffer.data(), n);
-            if (n < buffer.size()) break;
+            if (n < buffer.size()) {
+                if (ferror(pipe)) {
+                    throw std::runtime_error("Error reading from pipe");
+                }
+                break;
+            }
         }
     } catch (...) {
 #if defined(_WIN32)
@@ -63,6 +68,12 @@ int run_shell_with_status(const std::string& cmd, std::string& result) {
     rc = _pclose(pipe);
 #else
     rc = pclose(pipe);
+    // Extract actual exit code from pclose return value
+    if (WIFEXITED(rc)) {
+        rc = WEXITSTATUS(rc);
+    } else if (WIFSIGNALED(rc)) {
+        rc = 128 + WTERMSIG(rc);
+    }
 #endif
     return rc;
 }
@@ -93,7 +104,11 @@ std::optional<std::string> http_get(const std::string& url, const std::vector<st
 #else
     cmd += " 2>/dev/null";
 #endif
-    std::string result = run_shell(cmd);
+    std::string result;
+    int rc = run_shell_with_status(cmd, result);
+    if (rc != 0 && result.empty()) {
+        return std::nullopt;
+    }
     size_t pos = result.rfind(kMarker);
     if (pos == std::string::npos) {
         return std::nullopt;
@@ -132,8 +147,12 @@ std::optional<std::string> http_post_json(const std::string& url, const std::str
 #else
     cmd += " 2>/dev/null";
 #endif
-    std::string result = run_shell(cmd);
+    std::string result;
+    int rc = run_shell_with_status(cmd, result);
     std::error_code ec; std::filesystem::remove(path_str, ec);
+    if (rc != 0 && result.empty()) {
+        return std::nullopt;
+    }
     size_t pos = result.rfind(kMarker);
     if (pos == std::string::npos) {
         return std::nullopt;

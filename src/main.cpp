@@ -363,7 +363,14 @@ int main(int argc, char** argv) {
             if (cmd.empty()) { cout << "使い方: /sh! <コマンド> または /prog! <プログラム> [引数]" << "\n"; continue; }
             auto why = is_blocked(cmd);
             if (!why.empty()) { cout << (why=="deny"?"[拒否] 拒否リストに一致: ":"[未許可] 許可リストに未一致: ") << cmd << "\n"; cout << "必要なら /allow add <パターン> を追加してください。\n"; continue; }
-            string out; int rc = utils::run_shell_with_status(cmd + " 2>&1", out);
+            string out; 
+            int rc = -1;
+            try {
+                rc = utils::run_shell_with_status(cmd + " 2>&1", out);
+            } catch (const std::exception& e) {
+                cout << "[エラー] コマンド実行に失敗: " << e.what() << "\n";
+                continue;
+            }
             cout << out;
             cout << "[exit=" << rc << "]\n";
             continue;
@@ -377,7 +384,14 @@ int main(int argc, char** argv) {
             string yn; if (!getline(cin, yn)) { cin.clear(); yn.clear(); }
             auto t = utils::trim(yn); transform(t.begin(), t.end(), t.begin(), ::tolower);
             if (t=="y"||t=="yes") {
-                string out; int rc = utils::run_shell_with_status(cmd + " 2>&1", out);
+                string out; 
+                int rc = -1;
+                try {
+                    rc = utils::run_shell_with_status(cmd + " 2>&1", out);
+                } catch (const std::exception& e) {
+                    cout << "[エラー] コマンド実行に失敗: " << e.what() << "\n";
+                    continue;
+                }
                 cout << out;
                 cout << "[exit=" << rc << "]\n";
             } else {

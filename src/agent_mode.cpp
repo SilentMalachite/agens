@@ -97,7 +97,24 @@ ApplyResult apply_file_blocks(const string& output, bool dry_run) {
         if (!dry_run) {
             std::error_code ec;
             fs::create_directories(p.parent_path(), ec);
-            ofstream ofs(p, ios::binary); ofs << body; ofs.close();
+            if (ec) {
+                log << "[error] Failed to create directory: " << p.parent_path().string() << "\n";
+                pos = fence2 + 3;
+                continue;
+            }
+            ofstream ofs(p, ios::binary); 
+            if (!ofs) {
+                log << "[error] Failed to open file for writing: " << p.string() << "\n";
+                pos = fence2 + 3;
+                continue;
+            }
+            ofs << body; 
+            ofs.close();
+            if (ofs.fail()) {
+                log << "[error] Failed to write file: " << p.string() << "\n";
+                pos = fence2 + 3;
+                continue;
+            }
         }
         ar.written.push_back(p);
         log << (dry_run?"[plan] ":"[write] ") << p.string() << " (" << body.size() << " bytes)\n";
