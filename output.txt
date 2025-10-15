@@ -1,0 +1,9 @@
+Starting local LLM agent. Replies in Japanese.
+[System] macOS, RAM~32GB, Unified memory (est. GPU ~9GB), Apple Silicon, GPU:       Chipset Model: Apple M1 Max
+[Recommended] context=3072, max_tokens=640, temperature=0.7, top_p=0.9, gpu_layers=35
+選択: ollama
+利用可能なモデル:
+  [1] gemma3:12b
+  [2] qwen3-coder:latest
+> モデル番号を選択（空Enterで1番）: モデル: gemma3:12b
+こんにちは。何かお手伝いできることはありますか？n
