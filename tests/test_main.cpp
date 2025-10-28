@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <fstream>
+#include <filesystem>
 
 #include "system_info.hpp"
 #include "chat.hpp"
