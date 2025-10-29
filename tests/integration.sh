@@ -19,13 +19,18 @@ echo "$out" | grep -q "^使い方: agens" || fail "Japanese help not shown"
 ok "help (ja)"
 
 # 3) 統合メモリ比率（英語表示でラベル確認）
+# Apple Silicon 以外では統合メモリラベルは表示されない
 set +e
 out=$(AGENS_LANG=en AGENS_UNIFIED_GPU_RATIO=0.3 "$exe" -p hi 2>&1)
 rc=$?
 set -e
 [[ $rc -eq 0 || $rc -eq 1 ]] || fail "unexpected exit code: $rc"
-echo "$out" | grep -q ", Unified memory (est. GPU ~" || fail "Unified memory label missing (en)"
-ok "unified memory label (en)"
+if echo "$out" | grep -q "Apple Silicon"; then
+    echo "$out" | grep -q ", Unified memory (est. GPU ~" || fail "Unified memory label missing (en)"
+    ok "unified memory label (en) on Apple Silicon"
+else
+    ok "unified memory label (en) - skipped on non-Apple Silicon"
+fi
 
 # 4) バックエンド未起動時メッセージ（英語）または正常起動メッセージ
 if echo "$out" | grep -q "No local API found for Ollama(11434) or LM Studio(1234)."; then
@@ -42,11 +47,16 @@ echo "$out" | grep -q "curl:" && fail "curl stderr leaked"
 ok "curl stderr suppressed"
 
 # 6) 比率が異常値でもラベルが出る（クランプ）
+# Apple Silicon 以外では統合メモリラベルは表示されない
 set +e
 out=$(AGENS_LANG=en AGENS_UNIFIED_GPU_RATIO=abc "$exe" -p hi 2>&1)
 set -e
-echo "$out" | grep -q ", Unified memory (est. GPU ~" || fail "Unified memory label missing with invalid ratio"
-ok "invalid ratio clamped"
+if echo "$out" | grep -q "Apple Silicon"; then
+    echo "$out" | grep -q ", Unified memory (est. GPU ~" || fail "Unified memory label missing with invalid ratio"
+    ok "invalid ratio clamped on Apple Silicon"
+else
+    ok "invalid ratio clamped - skipped on non-Apple Silicon"
+fi
 
 echo "Integration OK"
 exit 0
