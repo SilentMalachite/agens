@@ -24,7 +24,7 @@ out=$(AGENS_LANG=en AGENS_UNIFIED_GPU_RATIO=0.3 "$exe" -p hi 2>&1)
 rc=$?
 set -e
 [[ $rc -eq 0 || $rc -eq 1 ]] || fail "unexpected exit code: $rc"
-echo "$out" | grep -q "Unified memory (est. GPU ~" || fail "Unified memory label missing (en)"
+echo "$out" | grep -q ", Unified memory (est. GPU ~" || fail "Unified memory label missing (en)"
 ok "unified memory label (en)"
 
 # 4) バックエンド未起動時メッセージ（英語）または正常起動メッセージ
@@ -45,7 +45,7 @@ ok "curl stderr suppressed"
 set +e
 out=$(AGENS_LANG=en AGENS_UNIFIED_GPU_RATIO=abc "$exe" -p hi 2>&1)
 set -e
-echo "$out" | grep -q "Unified memory (est. GPU ~" || fail "Unified memory label missing with invalid ratio"
+echo "$out" | grep -q ", Unified memory (est. GPU ~" || fail "Unified memory label missing with invalid ratio"
 ok "invalid ratio clamped"
 
 echo "Integration OK"
