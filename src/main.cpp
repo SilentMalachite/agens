@@ -186,6 +186,10 @@ int main(int argc, char** argv) {
     bool auto_dry_run = config.auto_dry_run;
     std::vector<std::string> allow_patterns = config.allow_patterns;
     std::vector<std::string> deny_patterns  = config.deny_patterns;
+    // デフォルトの危険コマンド（設定が空のときのみ適用）
+    if (deny_patterns.empty()) {
+        deny_patterns = {"rm -rf", "sudo", "shutdown", "reboot", "mkfs", "dd if=", ":(){ :|:& };:"};
+    }
 
     // システムプロンプト（常に日本語で応答）
     string system_jp = "あなたは有能なローカルAIアシスタントです。常に日本語で、簡潔かつ丁寧に回答してください。";
@@ -254,7 +258,7 @@ int main(int argc, char** argv) {
         }
         if (user.rfind("/cd",0)==0) {
             auto path = utils::trim(user.substr(3));
-            if (path.empty()) { cout << std::filesystem::current_path().string() << "\n"; continue; }
+            if (path.empty()) { cout << filesystem::current_path().string() << "\n"; continue; }
             // ~ 展開
             if (path[0]=='~') {
                 const char* home = getenv(
